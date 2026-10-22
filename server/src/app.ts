@@ -1,3 +1,4 @@
+
 import express from 'express';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
@@ -8,12 +9,12 @@ import dotenv from 'dotenv';
 import { connectDB } from './config/db';
 import apiRoutes from './routes/apiRoutes';
 import { errorHandler } from './middleware/errorHandler';
-import { seedDatabase } from './utils/seed';
 
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
+
 const io = new SocketIOServer(server, {
   cors: {
     origin: '*',
@@ -34,7 +35,9 @@ io.on('connection', (socket) => {
 
   socket.on('join_room', (room) => {
     socket.join(room);
-    console.log(`[Socket.io] Socket ${socket.id} joined room: ${room}`);
+    console.log(
+      `[Socket.io] Socket ${socket.id} joined room: ${room}`
+    );
   });
 
   socket.on('disconnect', () => {
@@ -62,13 +65,12 @@ const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   await connectDB();
-  await seedDatabase();
 
   server.listen(PORT, () => {
-    console.log(`==================================================`);
-    console.log(`🚀 NGO CONNECT API Engine running on port ${PORT}`);
-    console.log(`🌐 Health check: http://localhost:${PORT}/api/v1/health`);
-    console.log(`==================================================`);
+    console.log('==================================================');
+    console.log(`NGO CONNECT API Engine running on port ${PORT}`);
+    console.log(`Health check: /api/v1/health`);
+    console.log('==================================================');
   });
 };
 
